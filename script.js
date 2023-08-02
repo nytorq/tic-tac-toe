@@ -2,6 +2,7 @@ const gameBoard = (function () {
     const columns = 3;
     const rows = 3;
     const board = [];
+    let turns = 0;
     const players = [
         {
             id: 1,
@@ -19,32 +20,33 @@ const gameBoard = (function () {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     }
 
-    for (i=0 ; i < rows ; i++) {
-        let currentRow = [];
-        board.push(currentRow);
-        for (j=0 ; j < columns ; j++) {
-            function createCell(cellValue = '') {
-                return cellValue;
+    const createBoard = () => {
+        for (i=0 ; i < rows ; i++) {
+            let currentRow = [];
+            board.push(currentRow);
+            for (j=0 ; j < columns ; j++) {
+                function createCell(cellValue = '') {
+                    return cellValue;
+                }
+                currentRow.push(createCell())
             }
-            currentRow.push(createCell())
         }
     }
+    createBoard();
+
+    const clearBoard = () => {
+        for (i = 0 ; i < board.length ; i++) {
+            for (j = 0 ; j < board.length ; j++) {
+                board[i][j] = '';
+            }   
+        }
+    };
 
     const evaluateRows = () => {
         let marker = activePlayer.marker
         let winner;
-        // for (i = 0 ; i < board.length ; i++) {
-        //     if ( Object.is(marker, board[i][0]) && Object.is(marker, board[i][1]) && Object.is(marker, board[i][2])) {
-        //         console.log(`Player ${activePlayer.id} has won the game. Found in board[${[i]}] row!`);
-        //     } else if (Object.is(marker, board[0][i]) && Object.is(marker, board[1][i]) && Object.is(marker, board[2][i])) {
-        //         console.log(`Player ${activePlayer.id} has won the game. Found in board[${[i]}] col!`);
-        //     } else if (Object.is(marker, board[0][0]) && Object.is(marker, board[1][1]) && Object.is(marker, board[2][2])) {
-        //         console.log(`Player ${activePlayer.id} has won the game. Found in top-left to bottom-right diagonal.`);
-        //     } else if (Object.is(marker, board[2][0]) && Object.is(marker, board[1][1]) && Object.is(marker, board[0][2])) {
-        //         console.log(`Player ${activePlayer.id} has won the game. Found in bottom-left to top-right diagonal.`);
-        //     }
-        // }
 
+        // Check for a winner
         for (i = 0 ; i < board.length ; i++) {
             if ( Object.is(marker, board[i][0]) && Object.is(marker, board[i][1]) && Object.is(marker, board[i][2])) {
                 winner = activePlayer.id;
@@ -59,12 +61,14 @@ const gameBoard = (function () {
 
         if (winner) {
             console.log(`Player ${activePlayer.id} has won the game.`);
+        } else if (turns === 8) {
+            console.log('Stalemate!');
         } else {
             switchPlayerTurn();
             console.log(`Player ${activePlayer.id} it's your turn. Use gameBoard.playRound() to make a move.`)
         }
         console.log(board);
-    }    
+    }
     
     const playRound = (position) => {
         if (board[position[0]][position[1]]) {
@@ -72,7 +76,9 @@ const gameBoard = (function () {
         } else {
             board[position[0]][position[1]] = activePlayer.marker;
             evaluateRows();
+            gameBoard.turns += 1;
         }
     }
-    return { board, playRound, players };   
+    
+    return { board, playRound, players, turns, clearBoard};
 })();
