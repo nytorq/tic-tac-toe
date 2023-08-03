@@ -1,4 +1,4 @@
-const gameBoard = (function () {
+const ticTacToe = (function () {
     const columns = 3;
     const rows = 3;
     const board = [];
@@ -40,6 +40,7 @@ const gameBoard = (function () {
                 board[i][j] = '';
             }   
         }
+        console.log("The gameboard has been cleared", '\n', board)
     };
 
     const evaluateRows = () => {
@@ -65,7 +66,7 @@ const gameBoard = (function () {
             console.log('Stalemate!');
         } else {
             switchPlayerTurn();
-            console.log(`Player ${activePlayer.id} it's your turn. Use gameBoard.playRound() to make a move.`)
+            console.log(`Player ${activePlayer.id} it's your turn. Use ticTacToe.playRound() to make a move.`)
         }
         console.log(board);
     }
@@ -76,9 +77,33 @@ const gameBoard = (function () {
         } else {
             board[position[0]][position[1]] = activePlayer.marker;
             evaluateRows();
-            gameBoard.turns += 1;
+            ticTacToe.turns += 1;
         }
     }
     
     return { board, playRound, players, turns, clearBoard};
 })();
+
+function ScreenController() {
+    const GameBoard = document.createElement('div');
+    GameBoard.className = 'gameBoard';
+    document.body.appendChild(GameBoard);
+    for (i = 0 ; i < 9 ; i++) {
+        let cell = document.createElement('button');
+        cell.className = 'gameBoardCell';
+        cell.setAttribute('cell-id',`${i}`)
+        cell.addEventListener('click',()=>console.log(`cell ${cell.getAttribute('cell-id')}`));
+        GameBoard.appendChild(cell);
+    }
+    
+    const insertMarker = () => {
+        /*
+        - Click event sends up cell id
+        - Transpose cell id to equivalent item in array
+        - Call the playRound() function and pass the above value as an argument
+        - 
+        */
+    }
+}
+
+ScreenController();
