@@ -1,7 +1,7 @@
 const ticTacToe = (function () {
     const columns = 3;
     const rows = 3;
-    const board = [];
+    let board = [];
     let turns = 0;
     const players = [
         {
@@ -17,9 +17,18 @@ const ticTacToe = (function () {
     let activePlayer = players[0];
 
     const switchPlayerTurn = () => {
-        activePlayer = activePlayer === players[0] ? players[1] : players[0];
+        ticTacToe.activePlayer = ticTacToe.activePlayer === players[0] ? players[1] : players[0];
     }
 
+    // const displayConsoleBoard = () => {
+    //     for (i = 0 ; i < rows ; i++) {
+    //         let tempRow = [];
+    //         tempRow.push(board[i].pop())
+    //         console.log(tempRow)
+    //     }
+    // }
+
+    // displayConsoleBoard();
     const createBoard = () => {
         for (i=0 ; i < rows ; i++) {
             let currentRow = [];
@@ -61,12 +70,12 @@ const ticTacToe = (function () {
         }
 
         if (winner) {
-            console.log(`Player ${activePlayer.id} has won the game.`);
+            console.log(`Player ${ticTacToe.activePlayer.id} has won the game.`);
         } else if (turns === 8) {
             console.log('Stalemate!');
         } else {
             switchPlayerTurn();
-            console.log(`Player ${activePlayer.id} it's your turn. Use ticTacToe.playRound() to make a move.`)
+            console.log(`Player ${ticTacToe.activePlayer.id} it's your turn. Use ticTacToe.playRound() to make a move.`)
         }
         console.log(board);
     }
@@ -75,35 +84,52 @@ const ticTacToe = (function () {
         if (board[position[0]][position[1]]) {
             console.log("This cell is already taken. Please choose another.")
         } else {
-            board[position[0]][position[1]] = activePlayer.marker;
+            board[position[0]][position[1]] = ticTacToe.activePlayer.marker;
             evaluateRows();
             ticTacToe.turns += 1;
         }
     }
     
-    return { board, playRound, players, turns, clearBoard};
+    return { board, playRound, players, activePlayer, turns, clearBoard};
 })();
 
-function ScreenController() {
+
+const ScreenController = (function() {
+    const translator = new Map();
+    translator.set(0, [0,0]);
+    translator.set(1, [0,1]);
+    translator.set(2, [0,2]);
+    translator.set(3, [1,0]);
+    translator.set(4, [1,1]);
+    translator.set(5, [1,2]);
+    translator.set(6, [2,0]);
+    translator.set(7, [2,1]);
+    translator.set(8, [2,2]);
     const GameBoard = document.createElement('div');
     GameBoard.className = 'gameBoard';
     document.body.appendChild(GameBoard);
-    for (i = 0 ; i < 9 ; i++) {
-        let cell = document.createElement('button');
-        cell.className = 'gameBoardCell';
-        cell.setAttribute('cell-id',`${i}`)
-        cell.addEventListener('click',()=>console.log(`cell ${cell.getAttribute('cell-id')}`));
-        GameBoard.appendChild(cell);
+    let cell;
+    const getCellID = (cell) => {
+        // cell.prototype.id = cell.getAttribute('cell-id');
+        return cell.target.getAttribute('cell-id');
     }
-    
-    const insertMarker = () => {
+    const insertMarker = (cell) => {
         /*
         - Click event sends up cell id
         - Transpose cell id to equivalent item in array
         - Call the playRound() function and pass the above value as an argument
-        - 
         */
+        // console.log(getCellID(cell));
+        let arrayPosition = translator.get(Number(getCellID(cell)));
+        cell.target.innerHTML = ticTacToe.activePlayer.marker;
+        ticTacToe.playRound(arrayPosition)
     }
-}
-
-ScreenController();
+    for (i = 0 ; i < 9 ; i++) {
+        cell = document.createElement('button');
+        cell.className = 'gameBoardCell';
+        cell.setAttribute('cell-id',`${i}`)
+        cell.addEventListener('click', insertMarker);
+        GameBoard.appendChild(cell);
+    }
+    return {translator}
+})();
