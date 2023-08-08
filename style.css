@@ -4,22 +4,76 @@ html {
 }
 
 .gameBoard {
-    border: 1px solid white;
-    height: 75vw;
+    /* border: 1px solid white; */
+    /* height: 75vw;
     max-height: 33vh;
-    width: 75vw;
+    width: 75vw; */
+    max-width: 500px;
     display: grid;
-    grid-template-columns: repeat(3, 33%);
-    grid-column-gap: 10px;
+    grid-template-columns: repeat(3, 110px);
+    /* grid-column-gap: 10px; */
     grid-row-gap: 10px;
     padding: 10px;
-    justify-content: space-around
+    /* justify-content: space-around */
 }
 
 .gameBoardCell {
     background-color: transparent;
-    border: 1px solid hotpink;
-    height: 100%;
-    width: 100%;
-    color: white;
+    border: 1px solid fuchsia;
+    height: 100px;
+    width: 100px;
+    color: #f94242;
+    font-size: 80px;
+}
+
+.gameControls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 1em;
+}
+
+
+.formControl {
+    display: flex;
+    flex-direction: column;
+}
+
+.nameInputs {
+    background: transparent;
+    border: 1px solid white;
+    height: 32px;
+    border-radius: 3px;
+    color: fuchsia;
+    font-size: 16px;
+}
+
+label {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+button.gameControls {
+    background: transparent;
+    color: fuchsia;
+    border: 1px dotted fuchsia;
+    border-radius: 8px;
+    padding: 0 16px;
+    align-items: center;
+}
+
+button.gameControls:hover {
+    border-style: solid;
+}
+
+.winningCell {
+    border: 3px solid white;
+    box-shadow: inset 0 0 20px 9px #ff00ff85 
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: fuchsia;
+    font-size: 3em;
 }

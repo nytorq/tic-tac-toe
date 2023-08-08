@@ -6,9 +6,22 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1>Tic Tac Toe</h1>
-    <button onClick="ticTacToe.clearBoard()">Clear</button>
+    <form class="gameControls">
+        <div class="formControl">
+            <label for="player1Name">Player 1 (X)</label>
+            <input type="text" id="player1Name" name="player1Name" class="nameInputs">    
+        </div>
+        <div class="formControl">
+            <label for="player2Name">Player 2 (O)</label>
+            <input type="text" id="player2Name" name="player2Name" class="nameInputs">
+        </div>
+        <button class="gameControls" onClick="ticTacToe.clearBoard()">Reset Game</button>
+    </form>
 </body>
 </html>
