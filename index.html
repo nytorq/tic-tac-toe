@@ -11,6 +11,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <section class="modalAndOverlay hidden">
+        <div class="modal">
+            <h2><span id="winningPlayer">Player 1</span> has won the game!</h2>
+            <button onClick="ticTacToe.clearBoard()">Restart Game</button>
+        </div>
+        <div class="overlay"></div>
+    </section>
     <h1>Tic Tac Toe</h1>
     <form class="gameControls">
         <div class="formControl">

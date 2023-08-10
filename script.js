@@ -17,6 +17,8 @@ const ticTacToe = (function () {
     ];
     const gameStatus = {
         winner: '',
+        winnerName: '',
+        winnerId: '',
         winningCells: []
     }
     
@@ -61,9 +63,11 @@ const ticTacToe = (function () {
         let cells = document.getElementsByClassName('gameBoardCell');
         for (i = 0 ; i < cells.length ; i++) {
             cells[i].innerHTML = '';
+            cells[i].classList.remove('winningCell');
         }
         ticTacToe.gameStatus.winner = '';
         ticTacToe.gameStatus.winningCells = [];
+
         console.log("The game has been reset", '\n', board)
     };
 
@@ -76,23 +80,31 @@ const ticTacToe = (function () {
             if  // Checking rows...
                 (Object.is(marker, board[i][0]) && Object.is(marker, board[i][1]) && Object.is(marker, board[i][2])) {
                 ticTacToe.gameStatus.winner = activePlayer.id;
+                ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
+                ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
                 ticTacToe.gameStatus.winningCells.push([parseInt(`${i}`),0], [parseInt(`${i}`),1], [parseInt(`${i}`),2]);
                 ScreenController.displayWin();
             }   // Checking columns
                 else if (Object.is(marker, board[0][i]) && Object.is(marker, board[1][i]) && Object.is(marker, board[2][i])) {
                 ticTacToe.gameStatus.winner = activePlayer.id;
-                ticTacToe.gameStatus.winningCells.push([parseInt(`${i}`),0], [parseInt(`${i}`),1], [parseInt(`${i}`),2]);
+                ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
+                ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
+                ticTacToe.gameStatus.winningCells.push([0,parseInt(`${i}`)], [1,parseInt(`${i}`)], [2,parseInt(`${i}`)]);
                 ScreenController.displayWin();
             }
         }
         // Checking top-left to bottom-right diagonal
         if (Object.is(marker, board[0][0]) && Object.is(marker, board[1][1]) && Object.is(marker, board[2][2])) {
             ticTacToe.gameStatus.winner = activePlayer.id;
+            ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
+            ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
             ticTacToe.gameStatus.winningCells.push([0,0],[1,1],[2,2]);
             ScreenController.displayWin();
         }   // Checking bottom-left to top-right diagonal
             else if (Object.is(marker, board[2][0]) && Object.is(marker, board[1][1]) && Object.is(marker, board[0][2])) {
             ticTacToe.gameStatus.winner = activePlayer.id;
+            ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
+            ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
             ticTacToe.gameStatus.winningCells.push([2,0],[1,1],[0,2]);
             ScreenController.displayWin();
         }
@@ -188,6 +200,15 @@ const ScreenController = (function() {
                 }
             }            
         }
+        let winningModal = document.getElementsByClassName('modalAndOverlay');
+        const winningPlayer = document.getElementById('winningPlayer');
+        if (ticTacToe.gameStatus.winnerName) {
+            winningPlayer.innerText = ticTacToe.gameStatus.winnerName;
+        } else {
+            winningPlayer.innerText = `Player ${ticTacToe.gameStatus.winner}`;
+        }
+        winningPlayer.innerText
+        winningModal[0].classList.remove('hidden');
     }
     
     return {translator, nameInputs, displayWin, cells}
