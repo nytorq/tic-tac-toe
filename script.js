@@ -17,14 +17,10 @@ const ticTacToe = (function () {
     ];
     const gameStatus = {
         winner: '',
-        winnerName: '',
-        winnerId: '',
         winningCells: []
     }
     
     let activePlayer = players[0];
-
-
 
     const switchPlayerTurn = () => {
         ticTacToe.activePlayer = ticTacToe.activePlayer === players[0] ? players[1] : players[0];
@@ -63,11 +59,15 @@ const ticTacToe = (function () {
         let cells = document.getElementsByClassName('gameBoardCell');
         for (i = 0 ; i < cells.length ; i++) {
             cells[i].innerHTML = '';
-            cells[i].classList.remove('winningCell');
+            cells[i].classList.remove('winningCell', 'marker-X', 'marker-O');
         }
         ticTacToe.gameStatus.winner = '';
         ticTacToe.gameStatus.winningCells = [];
-
+        ScreenController.winningModal[0].classList.add('hidden');
+        ticTacToe.activePlayer = players[0];
+        ticTacToe.turns = 0;
+        ScreenController.winnerBanner.classList.remove('hidden')
+        ScreenController.stalemateBanner.classList.add('hidden')
         console.log("The game has been reset", '\n', board)
     };
 
@@ -79,40 +79,30 @@ const ticTacToe = (function () {
         for (i = 0 ; i < board.length ; i++) {
             if  // Checking rows...
                 (Object.is(marker, board[i][0]) && Object.is(marker, board[i][1]) && Object.is(marker, board[i][2])) {
-                ticTacToe.gameStatus.winner = activePlayer.id;
-                ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
-                ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
+                ticTacToe.activePlayer.name !== '' ? ticTacToe.gameStatus.winner = ticTacToe.activePlayer.name : ticTacToe.gameStatus.winner = ticTacToe.activePlayer.id;
                 ticTacToe.gameStatus.winningCells.push([parseInt(`${i}`),0], [parseInt(`${i}`),1], [parseInt(`${i}`),2]);
-                ScreenController.displayWin();
             }   // Checking columns
                 else if (Object.is(marker, board[0][i]) && Object.is(marker, board[1][i]) && Object.is(marker, board[2][i])) {
-                ticTacToe.gameStatus.winner = activePlayer.id;
-                ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
-                ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
+                ticTacToe.activePlayer.name !== '' ? ticTacToe.gameStatus.winner = ticTacToe.activePlayer.name : ticTacToe.gameStatus.winner = ticTacToe.activePlayer.id;
                 ticTacToe.gameStatus.winningCells.push([0,parseInt(`${i}`)], [1,parseInt(`${i}`)], [2,parseInt(`${i}`)]);
-                ScreenController.displayWin();
             }
         }
         // Checking top-left to bottom-right diagonal
         if (Object.is(marker, board[0][0]) && Object.is(marker, board[1][1]) && Object.is(marker, board[2][2])) {
-            ticTacToe.gameStatus.winner = activePlayer.id;
-            ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
-            ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
+            ticTacToe.activePlayer.name !== '' ? ticTacToe.gameStatus.winner = ticTacToe.activePlayer.name : ticTacToe.gameStatus.winner = ticTacToe.activePlayer.id;
             ticTacToe.gameStatus.winningCells.push([0,0],[1,1],[2,2]);
-            ScreenController.displayWin();
         }   // Checking bottom-left to top-right diagonal
             else if (Object.is(marker, board[2][0]) && Object.is(marker, board[1][1]) && Object.is(marker, board[0][2])) {
-            ticTacToe.gameStatus.winner = activePlayer.id;
-            ticTacToe.gameStatus.winnerName = ticTacToe.players[activePlayer.id].name
-            ticTacToe.gameStatus.winnerId = ticTacToe.players[activePlayer.id].id
+            ticTacToe.activePlayer.name !== '' ? ticTacToe.gameStatus.winner = ticTacToe.activePlayer.name : ticTacToe.gameStatus.winner = ticTacToe.activePlayer.id;
             ticTacToe.gameStatus.winningCells.push([2,0],[1,1],[0,2]);
-            ScreenController.displayWin();
         }
 
-        if (ticTacToe.gameStatus.winner) {
-            console.log(`Player ${ticTacToe.gameStatus.winner} has won the game.`);
-        } else if (turns === 8) {
+        if (ticTacToe.gameStatus.winner !== '') {
+            console.log(`Player ${ticTacToe.gameStatus.id + 1} has won the game.`);
+            ScreenController.displayWin();
+        } else if (ticTacToe.turns >= 8) {
             console.log('Stalemate!');
+            ScreenController.displayTie();
         } else {
             switchPlayerTurn();
             console.log(`Player ${ticTacToe.gameStatus.winner} it's your turn. Use ticTacToe.playRound() to make a move.`)
@@ -151,6 +141,9 @@ const ScreenController = (function() {
     GameBoard.className = 'gameBoard';
     document.body.appendChild(GameBoard);
     let cell;
+    const winningModal = document.getElementsByClassName('modalAndOverlay');
+    const stalemateBanner = document.getElementById('stalemateBanner');
+    const winnerBanner = document.getElementById('winnerBanner');
     const getCellID = (cell) => {
         // cell.prototype.id = cell.getAttribute('cell-id');
         return cell.target.getAttribute('cell-id');
@@ -158,8 +151,10 @@ const ScreenController = (function() {
     const insertMarker = (cell) => {
         let arrayPosition = translator.get(Number(getCellID(cell)));
         cell.target.innerHTML = ticTacToe.activePlayer.marker;
-        if (ticTacToe.activePlayer.marker == 'O') {
-            cell.target.style.color = '#0093ff';
+        if (ticTacToe.activePlayer.marker == 'X') {
+            cell.target.classList.add('marker-X');
+        } else if (ticTacToe.activePlayer.marker == 'O') {
+            cell.target.classList.add('marker-O');
         }
         ticTacToe.playRound(arrayPosition)
     }
@@ -200,16 +195,32 @@ const ScreenController = (function() {
                 }
             }            
         }
-        let winningModal = document.getElementsByClassName('modalAndOverlay');
+        
         const winningPlayer = document.getElementById('winningPlayer');
-        if (ticTacToe.gameStatus.winnerName) {
-            winningPlayer.innerText = ticTacToe.gameStatus.winnerName;
+        if ( isNaN(ticTacToe.gameStatus.winner) ) {
+            winningPlayer.innerText = ticTacToe.gameStatus.winner;
         } else {
             winningPlayer.innerText = `Player ${ticTacToe.gameStatus.winner}`;
         }
-        winningPlayer.innerText
+        winningModal[0].classList.remove('hidden');
+    }
+
+    const displayTie = () => {
+        stalemateBanner.classList.remove('hidden');
+        winnerBanner.classList.add('hidden');
         winningModal[0].classList.remove('hidden');
     }
     
-    return {translator, nameInputs, displayWin, cells}
+    return {translator, nameInputs, displayWin, displayTie, cells, winningModal, winnerBanner, stalemateBanner}
 })();
+
+/* Success/Failure, Who won, who was displayed:
+- 👍 P2, Othello
+- 🚫 P1, Oscar
+- 👍 P1, P1
+- 🚫 P2, P1
+- 🚫 P1, Oscar
+
+Summary:
+The console is showcasing the right winner, but we're passing through the wrong winner in the display.
+*/

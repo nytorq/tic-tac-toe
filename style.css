@@ -27,6 +27,14 @@ html {
     padding: 0;
 }
 
+.marker-X {
+    color: #f94242;
+}
+
+.marker-O {
+    color: #0093ff;
+}
+
 .gameControls {
     display: flex;
     flex-direction: row;
