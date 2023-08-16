@@ -4,17 +4,11 @@ html {
 }
 
 .gameBoard {
-    /* border: 1px solid white; */
-    /* height: 75vw;
-    max-height: 33vh;
-    width: 75vw; */
     max-width: 500px;
     display: grid;
     grid-template-columns: repeat(3, 110px);
-    /* grid-column-gap: 10px; */
     grid-row-gap: 10px;
     padding: 10px;
-    /* justify-content: space-around */
 }
 
 .gameBoardCell {
@@ -104,8 +98,10 @@ h1 {
     position: absolute;
     min-width: 200px;
     min-height: 200px;
+    max-width: 400px;
+    max-height: 250px;
     border-radius: 4px;
-    transform: translate(50%, 50%);
+    transform: translate(25%, 25%);
 }
 
 

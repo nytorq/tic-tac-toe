@@ -26,15 +26,6 @@ const ticTacToe = (function () {
         ticTacToe.activePlayer = ticTacToe.activePlayer === players[0] ? players[1] : players[0];
     }
 
-    // const displayConsoleBoard = () => {
-    //     for (i = 0 ; i < rows ; i++) {
-    //         let tempRow = [];
-    //         tempRow.push(board[i].pop())
-    //         console.log(tempRow)
-    //     }
-    // }
-
-    // displayConsoleBoard();
     const createBoard = () => {
         for (i=0 ; i < rows ; i++) {
             let currentRow = [];
@@ -68,12 +59,12 @@ const ticTacToe = (function () {
         ticTacToe.turns = 0;
         ScreenController.winnerBanner.classList.remove('hidden')
         ScreenController.stalemateBanner.classList.add('hidden')
+        console.clear();
         console.log("The game has been reset", '\n', board)
     };
 
     const evaluateRows = () => {
         let marker = ticTacToe.activePlayer.marker
-        // let winner;
 
         // Check for a winner
         for (i = 0 ; i < board.length ; i++) {
@@ -145,16 +136,17 @@ const ScreenController = (function() {
     const stalemateBanner = document.getElementById('stalemateBanner');
     const winnerBanner = document.getElementById('winnerBanner');
     const getCellID = (cell) => {
-        // cell.prototype.id = cell.getAttribute('cell-id');
         return cell.target.getAttribute('cell-id');
     }
     const insertMarker = (cell) => {
         let arrayPosition = translator.get(Number(getCellID(cell)));
-        cell.target.innerHTML = ticTacToe.activePlayer.marker;
-        if (ticTacToe.activePlayer.marker == 'X') {
-            cell.target.classList.add('marker-X');
-        } else if (ticTacToe.activePlayer.marker == 'O') {
-            cell.target.classList.add('marker-O');
+        if (cell.target.innerHTML == '') {
+            cell.target.innerHTML = ticTacToe.activePlayer.marker;
+            if (ticTacToe.activePlayer.marker == 'X') {
+                cell.target.classList.add('marker-X');
+            } else if (ticTacToe.activePlayer.marker == 'O') {
+                cell.target.classList.add('marker-O');
+            }
         }
         ticTacToe.playRound(arrayPosition)
     }
@@ -167,10 +159,6 @@ const ScreenController = (function() {
     }
 
     const recordPlayerName = (event) => {
-        // console.log(event)
-        // console.log(event.srcElement.id)
-        // console.log(event.target.value);
-        // console.log(event.srcElement.id);
         if (event.srcElement.id == 'player1Name') {
             ticTacToe.players[0].name = event.target.value;
             console.log(`Player 1's name is now ${ticTacToe.players[0].name}`)
@@ -179,7 +167,6 @@ const ScreenController = (function() {
             console.log(`Player 2's name is now ${ticTacToe.players[1].name}`)
         }
     }
-
     
     for (i = 0 ; i < 2 ; i++) {
         nameInputs[i].addEventListener('blur', recordPlayerName)
@@ -189,8 +176,6 @@ const ScreenController = (function() {
         for (i = 0 ; i < ticTacToe.gameStatus.winningCells.length ; i++) {
             for (j = 0 ; j < 9 ; j++) {
                 if (ScreenController.translator.get(j).toString() == ticTacToe.gameStatus.winningCells[i].toString()) {
-                    // ScreenController.cells[j].style.border = '3px solid white';
-                    // ScreenController.cells[j].style.boxShadow = 'inset 0 0 20px 9px #00ffa18f';
                     ScreenController.cells[j].classList.add('winningCell');
                 }
             }            
@@ -213,14 +198,3 @@ const ScreenController = (function() {
     
     return {translator, nameInputs, displayWin, displayTie, cells, winningModal, winnerBanner, stalemateBanner}
 })();
-
-/* Success/Failure, Who won, who was displayed:
-- 👍 P2, Othello
-- 🚫 P1, Oscar
-- 👍 P1, P1
-- 🚫 P2, P1
-- 🚫 P1, Oscar
-
-Summary:
-The console is showcasing the right winner, but we're passing through the wrong winner in the display.
-*/
